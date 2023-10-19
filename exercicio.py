@@ -1,8 +1,3 @@
-#CONDIÇÕES
-#validações de menu (ex: Opção inválida para cada entrada)
-#Em uma lista (produtos) cada elemento será um dicionário (produto) ... ok
-#teste
-
 import os
 
 # Função para carregar os produtos a partir do arquivo
@@ -122,7 +117,7 @@ def main():
                 4. Cadastrar novo produto
                 5. Editar produto
                 6. Excluir produto
-                7. Sair do programa
+                7. Salvar e Sair do programa
             ========================
         ''')
 
