@@ -1,8 +1,3 @@
-#CONDIÇÕES
-#validações de menu (ex: Opção inválida para cada entrada)
-#Em uma lista (produtos) cada elemento será um dicionário (produto) ... ok
-#teste
-
 import os
 
 # Função para carregar os produtos a partir do arquivo
