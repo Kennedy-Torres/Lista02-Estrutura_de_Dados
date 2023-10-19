@@ -148,6 +148,8 @@ def listarProdutosOrdemAlfabetica(produtos):
         print("Nenhum produto para listar.")
 #--
 
+# Função para escolher o campo que serah feito o metodo e a ordem 
+def listarProdutosPorCampo():
 
 # Função principal
 def main():
