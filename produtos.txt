@@ -1,0 +1,1 @@
+ID: 1, Nome: 1, Peso: 3.0, Valor: 7.0, Fornecedor: t6
