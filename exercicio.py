@@ -2,7 +2,7 @@ import os
 
 # Função para carregar os produtos a partir do arquivo
 def carregarProdutos():
-    produtos = []#lista de produtos que armazena produto[] -> logo armazena dicionários
+    produtos = []#lista de produtos que armazena produto{} -> logo armazena dicionários
     if os.path.exists('produtos.txt'):
         with open('produtos.txt', 'r') as file:
             for linha in file:
