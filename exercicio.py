@@ -81,75 +81,99 @@ def excluirProduto(produtos, idEscolhidoParaExcluirProduto):
 #--
 
 #Metodos de ordenacao
-def bubble_sort(produtos):
+def bubble_sort(produtos, chave):
     qtd_produtos = len(produtos)
     for i in range(qtd_produtos-1):
         for j in range(0, qtd_produtos-i-1):
-            if produtos[j]['Nome'] > produtos[j+1]['Nome']:
+            if produtos[j][chave] > produtos[j+1][chave]:
                 produtos[j], produtos[j+1] = produtos[j+1], produtos[j]
 
-def insertion_sort(produtos):
+def insertion_sort(produtos,chave):
     for i in range (1, len(produtos)):
-        chave = produtos[i]
+        chave_atual = produtos[i][chave]
         j = i-1
-        while j>=0 and chave['Nome'] < produtos[j]['Nome']:
+        while j>=0 and chave_atual < produtos[j][chave]:
             produtos[j+1] = produtos[j]
             j -= 1
-        produtos[j+1] = chave
+        produtos[j+1] = produtos[i]
     
-def selection_sort(produtos):
+def selection_sort(produtos, chave):
     qtd_produtos = len(produtos)
     for i in range(qtd_produtos):
         min_idx = i
         for j in range(i + 1, qtd_produtos):
-            if produtos[j]['Nome'] < produtos[min_idx]['Nome']:
+            if produtos[j][chave] < produtos[min_idx][chave]:
                 min_idx = j
         produtos[i], produtos[min_idx] = produtos[min_idx], produtos[i]
 #--
-    
-# Função para listar produtos pelo metodo
-def listarProdutosEmMetodos(produtos):
-    metodos = {'a': bubble_sort,'b': insertion_sort,'c': selection_sort} # atraves desse dicionario da pra eu filtrar qual funcao eu vou chamar 
+
+def leValidaMetodo():
+    #LER
     metodo_escolhido = input("METODOS:\n(a) - Bubble Sort\n(b) - Insertion Sort\n(c) - Selection Sort\nEscolha o método(a, b, c): ").lower()
-    #validacao do metodo q serah ordenado os produtos
+    #validacao
     while metodo_escolhido not in ['a', 'b', 'c']:
         print("Opção inválida para o metodo. Tente novamente.")
         metodo_escolhido = input("METODOS:\n(a) - Bubble Sort\n(b) - Insertion Sort\n(c) - Selection Sort\nEscolha o método(a, b, c): ").lower()
-    
-    
-    if metodo_escolhido in metodos: # filtrando
-        metodo_escolhido = metodos[metodo_escolhido] #sobrescreve os dados de metodo_escolhido... a/b/c = bubble_sorte/insertion_sort/selection_sort 
-        produtos_ordenados = produtos.copy()  # Copia a lista de produtos para evitar alterações na lista original
-        metodo_escolhido(produtos_ordenados)  # Ordena a cópia dos produtos ... bubble_sort/insertion_sort/selection_sort(produtos_ordenados)
-        listarProdutosOrdemAlfabetica(produtos_ordenados)
-        ##RETIRAR DEPOIS ... !!!!!!!!!!!!!!!
-        #for produto in produtos_ordenados:
-        #    print(produto)
-    
-    
-# Função para listar produtos em ordem alfabética (crescente ou decrescente)
-def listarProdutosOrdemAlfabetica(produtos):
-    #validação da Ordem dos produtos 
+    return metodo_escolhido    
+
+def leValidaOrdem():
+    #LER
     ordem = input("ORDEM:\n(d) - crescente\n(e) - decrescente\nEscolha a ordem(d, e): ").lower()
+    #validacao
     while ordem not in ['d', 'e']:
         print("Opção inválida para a ordem. Tente novamente.")
         ordem = input("ORDEM:\n(d) - crescente\n(e) - decrescente\nEscolha a ordem(d, e): ").lower()
+    return ordem
 
+def leValidaCampo():
+    campo_ordenacao = input("CAMPO:\n (f) - ID\n(g) - Nome\n(h) - Peso\n(i) - Valor\n(j) - Fornecedor\nEscolha o campo(f, g, h, i, j): ").lower()
+    while campo_ordenacao not in ['f','g','h','i','j']:
+        print("Campo de ordenação inválido. Tente novamente.")
+        campo_ordenacao = input("CAMPO:\n (f) - ID\n(g) - Nome\n(h) - Peso\n(i) - Valor\n(j) - Fornecedor\nEscolha o campo(f, g, h, i, j): ").lower()
+    return campo_ordenacao
+
+# FUNCIONALIDADE DA ORDEM
+def crescente(produtos_ordenados, campo_ordenacao):
+    chave_ordenacao = campo_ordenacao
+    produtos_ordenados = sorted(produtos_ordenados, key=lambda x: x [chave_ordenacao])
+
+def decrescente(produtos_ordenados, campo_ordenacao):
+    chave_ordenacao = campo_ordenacao    
+    produtos_ordenados = sorted(produtos_ordenados, key=lambda x: x [chave_ordenacao], reverse=True)
+#--
+
+
+
+def listarProdutosOrdenados(produtos, metodo, ordem, campo):
+    dicionarioCampo = {'f':'ID','g':'Nome','h':'Peso','i':'Valor','j':'Fornecedor'}
+    campo_ordenacao = dicionarioCampo[campo]
     
-    if ordem == 'd':
-        produtos_ordenados = sorted(produtos, key=lambda x: x['Nome'])
-    else:
-        produtos_ordenados = sorted(produtos, key=lambda x: x['Nome'], reverse=True)
+    #Copia da lista produtos
+    produtos_copia = produtos.copy()
+    
+    if metodo == 'a':
+        bubble_sort(produtos_copia, campo_ordenacao)
+    elif metodo == 'b':
+        insertion_sort(produtos_copia, campo_ordenacao)
+    elif metodo == 'c':
+        selection_sort(produtos_copia, campo_ordenacao)
 
-    if produtos_ordenados:
-        for produto in produtos_ordenados:
+    if ordem == 'e':
+        produtos_copia.reverse()
+        #crescente(produtos, campo_ordenacao)
+        
+    
+    if produtos_copia:
+        for produto in produtos_copia:
             print(produto)
     else:
         print("Nenhum produto para listar.")
-#--
+    #elif ordem == 'e':
+        #decrescente(produtos, campo_ordenacao)
 
-# Função para escolher o campo que serah feito o metodo e a ordem 
-def listarProdutosPorCampo():
+        
+#metodos = {'a': bubble_sort, 'b': insertion_sort, 'c': selection_sort}
+#dicionarioOrdem = {'d': crescente, 'e': decrescente}
 
 # Função principal
 def main():
@@ -191,8 +215,17 @@ def main():
             else:
                 print("Nenhum produto encontrado com os IDs especificados.")
         elif opMenu == '3':
+            metodo_escolhido = leValidaMetodo()
+            ordem_escolhida = leValidaOrdem()
+            campo_ordenacao = leValidaCampo() 
+            listarProdutosOrdenados(produtos, metodo_escolhido, ordem_escolhida, campo_ordenacao)
             
-            listarProdutosEmMetodos(produtos)
+            #if produtos:
+            #    for produto in produtos:
+            #        print(produto)
+            #else:
+            #    print("Nenhum produto para listar.")
+
         elif opMenu == '4':
             nomeProduto = input("Digite o nome do produto: ")
             pesoProduto = float(input("Digite o peso do produto: "))
