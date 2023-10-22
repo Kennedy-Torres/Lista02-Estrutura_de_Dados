@@ -82,6 +82,13 @@ def atualizarProduto(produtos, idEscolhidoParaAtualizarProduto):
 def adicionarUsuario(nome_sobrenome_usuario, senha):
     with open('usuario.txt', 'a') as file:
         file.write(f"Nome: {nome_sobrenome_usuario}, Senha: {senha}\n")
+        
+def validarLogin(nome_sobrenome_usuario, senha):
+    with open('usuario.txt', 'r') as file:
+        for line in file:
+            if f"Nome: {nome_sobrenome_usuario}, Senha: {senha}" in line:
+                return True
+    return False
 
 def leValidaMetodo():
     metodo_escolhido = input("MÉTODOS:\n(a) - Bubble Sort\n(b) - Insertion Sort\n(c) - Selection Sort\nEscolha o método (a, b, c): ").lower()
@@ -170,10 +177,27 @@ def excluirProduto(produtos, idEscolhidoParaExcluirProduto):
 
 def main():
     produtos = carregarProdutos()
-
-    nomeSobrenome = input("Digite seu nome e sobrenome: ")
-    senha = getpass.getpass("Digite sua senha: ")
-    adicionarUsuario(nomeSobrenome, senha)
+    
+    logado = False
+    
+    while not logado:
+        opcao = input("1 - Cadastrar usuário\n2 - Fazer login\n3 - Sair\nEscolha uma opção: ") 
+        
+        if opcao == '1':
+            
+            cadastroUsuario = input("Cadastre um nome de usuário: ")
+            cadastroSenha = getpass.getpass("Cadastre uma senha: ")
+            adicionarUsuario(cadastroUsuario, cadastroSenha)
+        elif opcao == '2':
+            nomeSobrenome = input("Digite seu nome e sobrenome: ")
+            senha = getpass.getpass("Digite sua senha: ")
+            if validarLogin(nomeSobrenome, senha):
+                print("Acesso permitido. Bem-vindo")
+                logado = True
+            else:
+                print("Acesso negado, tente novamente.")
+        elif opcao == '3':
+            exit(1)
 
     while True:
         print('''

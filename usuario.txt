@@ -41,3 +41,9 @@ Nome: p, Senha: 1
 Nome: l, Senha: 4
 Nome: p, Senha: 1
 Nome: a, Senha: 1
+Nome: knd, Senha: 123
+Nome: knd, Senha: 1
+Nome: pql, Senha: 123
+Nome: pql, Senha: 123
+Nome: ppo, Senha: 99
+Nome: kennedy, Senha: knd1
