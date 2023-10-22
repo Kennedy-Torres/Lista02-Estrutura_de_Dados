@@ -1,21 +1,22 @@
 import os
+import re
+import getpass
 
 # Função para carregar os produtos a partir do arquivo
 def carregarProdutos():
-    produtos = []#lista de produtos que armazena produto{} -> logo armazena dicionários
+    produtos = []
     if os.path.exists('produtos.txt'):
         with open('produtos.txt', 'r') as file:
             for linha in file:
                 if linha.startswith('ID: '):
-                    # Extrai informações do produto da linha do arquivo e cria um dicionário para representar o produto
                     id_str = linha.split(': ')[1].split(',')[0]
                     id = int(id_str)
                     nome = linha.split('Nome: ')[1].split(',')[0]
                     peso = float(linha.split('Peso: ')[1].split(',')[0])
                     valor = float(linha.split('Valor: ')[1].split(',')[0])
                     fornecedor = linha.split('Fornecedor: ')[1].strip()
-                    
-                    produto = {'ID': id, 'Nome': nome, 'Peso': peso, 'Valor': valor, 'Fornecedor': fornecedor} #discionario
+
+                    produto = {'ID': id, 'Nome': nome, 'Peso': peso, 'Valor': valor, 'Fornecedor': fornecedor}
                     produtos.append(produto)
     return produtos
 
@@ -23,7 +24,6 @@ def carregarProdutos():
 def salvarProdutos(produtos):
     with open('produtos.txt', 'w') as file:
         for produto in produtos:
-            # Escreve informações do produto no arquivo
             file.write(f"ID: {produto['ID']}, Nome: {produto['Nome']}, Peso: {produto['Peso']}, Valor: {produto['Valor']}, Fornecedor: {produto['Fornecedor']}\n")
 
 # Função para adicionar um produto
@@ -35,32 +35,42 @@ def adicionarProduto(produtos, nome, peso, valor, fornecedor):
     novo_produto = {'ID': novo_id, 'Nome': nome, 'Peso': peso, 'Valor': valor, 'Fornecedor': fornecedor}
     produtos.append(novo_produto)
     return produtos
-#--
 
-# Função para adicionar usuario
-## abre o arquivo 'usuario.txt' e adicionar os dados ao final do arquivo
-def adicionarUsuario(nome_sobrenome_usuario, senha):
-    with open('usuario.txt', 'a') as file:
-        file.write(f"Nome: {nome_sobrenome_usuario}, Senha: {senha}\n")
-#--
-
-# Função para atualizar os dados do produto escolhido pelo usuario com base no ID
+# Função para atualizar os dados do produto escolhido pelo usuário com base no ID
 def atualizarProduto(produtos, idEscolhidoParaAtualizarProduto):
     for produto in produtos:
         if produto['ID'] == idEscolhidoParaAtualizarProduto:
             print(f"Produto atual: {produto}")
             novo_nome = input("Digite o novo nome (ou pressione Enter para manter o atual): ")
-            novo_peso = input("Digite o novo peso (ou pressione Enter para manter o atual): ")
-            novo_valor = input("Digite o novo valor (ou pressione Enter para manter o atual): ")
+            
+            while True:
+                novo_peso_input = input("Digite o novo peso (ou pressione Enter para manter o atual): ")
+                if novo_peso_input == '':
+                    break
+                if re.match(r'^[0-9.]+$', novo_peso_input):
+                    novo_peso = float(novo_peso_input)
+                    break
+                else:
+                    print("Peso inválido. Certifique-se de que você digitou um valor numérico válido.")
+            
+            while True:
+                novo_valor_input = input("Digite o novo valor (ou pressione Enter para manter o atual): ")
+                if novo_valor_input == '':
+                    break
+                if re.match(r'^[0-9.]+$', novo_valor_input):
+                    novo_valor = float(novo_valor_input)
+                    break
+                else:
+                    print("Valor inválido. Certifique-se de que você digitou um valor numérico válido.")
+            
             novo_fornecedor = input("Digite o novo fornecedor (ou pressione Enter para manter o atual): ")
-
-            # Atualiza os campos do produto com os novos valores, se fornecidos... usando chave-valor
+            
             if novo_nome:
                 produto['Nome'] = novo_nome
-            if novo_peso:
-                produto['Peso'] = float(novo_peso)
-            if novo_valor:
-                produto['Valor'] = float(novo_valor)
+            if novo_peso_input:
+                produto['Peso'] = novo_peso
+            if novo_valor_input:
+                produto['Valor'] = novo_valor
             if novo_fornecedor:
                 produto['Fornecedor'] = novo_fornecedor
 
@@ -68,19 +78,40 @@ def atualizarProduto(produtos, idEscolhidoParaAtualizarProduto):
             return
     
     print(f"Nenhum produto encontrado com o ID {idEscolhidoParaAtualizarProduto}.")
-#--
-        
-def excluirProduto(produtos, idEscolhidoParaExcluirProduto):
-    for produto in produtos:
-        if produto['ID'] == idEscolhidoParaExcluirProduto:
-            produtos.remove(produto)
-            print(f"Produto com ID {idEscolhidoParaExcluirProduto} excluído com sucesso.")
-            return
-    
-    print(f"Nenhum produto encontrado com o ID {idEscolhidoParaExcluirProduto}.")
-#--
 
-#Metodos de ordenacao
+def adicionarUsuario(nome_sobrenome_usuario, senha):
+    with open('usuario.txt', 'a') as file:
+        file.write(f"Nome: {nome_sobrenome_usuario}, Senha: {senha}\n")
+
+def leValidaMetodo():
+    metodo_escolhido = input("MÉTODOS:\n(a) - Bubble Sort\n(b) - Insertion Sort\n(c) - Selection Sort\nEscolha o método (a, b, c): ").lower()
+    while metodo_escolhido not in ['a', 'b', 'c']:
+        print("Opção inválida para o método. Tente novamente.")
+        metodo_escolhido = input("MÉTODOS:\n(a) - Bubble Sort\n(b) - Insertion Sort\n(c) - Selection Sort\nEscolha o método (a, b, c): ").lower()
+    return metodo_escolhido
+
+def leValidaOrdem():
+    ordem = input("ORDEM:\n(d) - crescente\n(e) - decrescente\nEscolha a ordem (d, e): ").lower()
+    while ordem not in ['d', 'e']:
+        print("Opção inválida para a ordem. Tente novamente.")
+        ordem = input("ORDEM:\n(d) - crescente\n(e) - decrescente\nEscolha a ordem (d, e): ").lower()
+    return ordem
+
+def leValidaCampo():
+    campo_ordenacao = input("CAMPO:\n (f) - ID\n(g) - Nome\n(h) - Peso\n(i) - Valor\n(j) - Fornecedor\nEscolha o campo (f, g, h, i, j): ").lower()
+    while campo_ordenacao not in ['f', 'g', 'h', 'i', 'j']:
+        print("Campo de ordenação inválido. Tente novamente.")
+        campo_ordenacao = input("CAMPO:\n (f) - ID\n(g) - Nome\n(h) - Peso\n(i) - Valor\n(j) - Fornecedor\nEscolha o campo (f, g, h, i, j): ").lower()
+    return campo_ordenacao
+
+def crescente(produtos_ordenados, campo_ordenacao):
+    chave_ordenacao = campo_ordenacao
+    produtos_ordenados = sorted(produtos_ordenados, key=lambda x: x[chave_ordenacao])
+
+def decrescente(produtos_ordenados, campo_ordenacao):
+    chave_ordenacao = campo_ordenacao
+    produtos_ordenados = sorted(produtos_ordenados, key=lambda x: x[chave_ordenacao], reverse=True)
+
 def bubble_sort(produtos, chave):
     qtd_produtos = len(produtos)
     for i in range(qtd_produtos-1):
@@ -88,15 +119,15 @@ def bubble_sort(produtos, chave):
             if produtos[j][chave] > produtos[j+1][chave]:
                 produtos[j], produtos[j+1] = produtos[j+1], produtos[j]
 
-def insertion_sort(produtos,chave):
-    for i in range (1, len(produtos)):
+def insertion_sort(produtos, chave):
+    for i in range(1, len(produtos)):
         chave_atual = produtos[i][chave]
         j = i-1
-        while j>=0 and chave_atual < produtos[j][chave]:
+        while j >= 0 and chave_atual < produtos[j][chave]:
             produtos[j+1] = produtos[j]
             j -= 1
         produtos[j+1] = produtos[i]
-    
+
 def selection_sort(produtos, chave):
     qtd_produtos = len(produtos)
     for i in range(qtd_produtos):
@@ -105,52 +136,13 @@ def selection_sort(produtos, chave):
             if produtos[j][chave] < produtos[min_idx][chave]:
                 min_idx = j
         produtos[i], produtos[min_idx] = produtos[min_idx], produtos[i]
-#--
-
-def leValidaMetodo():
-    #LER
-    metodo_escolhido = input("METODOS:\n(a) - Bubble Sort\n(b) - Insertion Sort\n(c) - Selection Sort\nEscolha o método(a, b, c): ").lower()
-    #validacao
-    while metodo_escolhido not in ['a', 'b', 'c']:
-        print("Opção inválida para o metodo. Tente novamente.")
-        metodo_escolhido = input("METODOS:\n(a) - Bubble Sort\n(b) - Insertion Sort\n(c) - Selection Sort\nEscolha o método(a, b, c): ").lower()
-    return metodo_escolhido    
-
-def leValidaOrdem():
-    #LER
-    ordem = input("ORDEM:\n(d) - crescente\n(e) - decrescente\nEscolha a ordem(d, e): ").lower()
-    #validacao
-    while ordem not in ['d', 'e']:
-        print("Opção inválida para a ordem. Tente novamente.")
-        ordem = input("ORDEM:\n(d) - crescente\n(e) - decrescente\nEscolha a ordem(d, e): ").lower()
-    return ordem
-
-def leValidaCampo():
-    campo_ordenacao = input("CAMPO:\n (f) - ID\n(g) - Nome\n(h) - Peso\n(i) - Valor\n(j) - Fornecedor\nEscolha o campo(f, g, h, i, j): ").lower()
-    while campo_ordenacao not in ['f','g','h','i','j']:
-        print("Campo de ordenação inválido. Tente novamente.")
-        campo_ordenacao = input("CAMPO:\n (f) - ID\n(g) - Nome\n(h) - Peso\n(i) - Valor\n(j) - Fornecedor\nEscolha o campo(f, g, h, i, j): ").lower()
-    return campo_ordenacao
-
-# FUNCIONALIDADE DA ORDEM
-def crescente(produtos_ordenados, campo_ordenacao):
-    chave_ordenacao = campo_ordenacao
-    produtos_ordenados = sorted(produtos_ordenados, key=lambda x: x [chave_ordenacao])
-
-def decrescente(produtos_ordenados, campo_ordenacao):
-    chave_ordenacao = campo_ordenacao    
-    produtos_ordenados = sorted(produtos_ordenados, key=lambda x: x [chave_ordenacao], reverse=True)
-#--
-
-
 
 def listarProdutosOrdenados(produtos, metodo, ordem, campo):
-    dicionarioCampo = {'f':'ID','g':'Nome','h':'Peso','i':'Valor','j':'Fornecedor'}
+    dicionarioCampo = {'f': 'ID', 'g': 'Nome', 'h': 'Peso', 'i': 'Valor', 'j': 'Fornecedor'}
     campo_ordenacao = dicionarioCampo[campo]
-    
-    #Copia da lista produtos
+
     produtos_copia = produtos.copy()
-    
+
     if metodo == 'a':
         bubble_sort(produtos_copia, campo_ordenacao)
     elif metodo == 'b':
@@ -160,29 +152,27 @@ def listarProdutosOrdenados(produtos, metodo, ordem, campo):
 
     if ordem == 'e':
         produtos_copia.reverse()
-        #crescente(produtos, campo_ordenacao)
-        
-    
+
     if produtos_copia:
         for produto in produtos_copia:
             print(produto)
     else:
         print("Nenhum produto para listar.")
-    #elif ordem == 'e':
-        #decrescente(produtos, campo_ordenacao)
 
-        
-#metodos = {'a': bubble_sort, 'b': insertion_sort, 'c': selection_sort}
-#dicionarioOrdem = {'d': crescente, 'e': decrescente}
+def excluirProduto(produtos, idEscolhidoParaExcluirProduto):
+    for produto in produtos:
+        if produto['ID'] == idEscolhidoParaExcluirProduto:
+            produtos.remove(produto)
+            print(f"Produto com ID {idEscolhidoParaExcluirProduto} excluído com sucesso.")
+            return
 
-# Função principal
+    print(f"Nenhum produto encontrado com o ID {idEscolhidoParaExcluirProduto}.")
+
 def main():
-    # Carrega os produtos do arquivo... evitará de resetar o ID dos produtos toda vez que abrir o programa
     produtos = carregarProdutos()
 
-    #Solicitando nome.sobrenome e senha
     nomeSobrenome = input("Digite seu nome e sobrenome: ")
-    senha = input("Digite sua senha: ")
+    senha = getpass.getpass("Digite sua senha: ")
     adicionarUsuario(nomeSobrenome, senha)
 
     while True:
@@ -217,27 +207,32 @@ def main():
         elif opMenu == '3':
             metodo_escolhido = leValidaMetodo()
             ordem_escolhida = leValidaOrdem()
-            campo_ordenacao = leValidaCampo() 
+            campo_ordenacao = leValidaCampo()
             listarProdutosOrdenados(produtos, metodo_escolhido, ordem_escolhida, campo_ordenacao)
-            
-            #if produtos:
-            #    for produto in produtos:
-            #        print(produto)
-            #else:
-            #    print("Nenhum produto para listar.")
-
         elif opMenu == '4':
             nomeProduto = input("Digite o nome do produto: ")
-            pesoProduto = float(input("Digite o peso do produto: "))
-            valorProduto = float(input("Digite o valor do produto: "))
-            fornecedorProduto = input("Informe o fornecedor do produto: ")
 
-            # Adiciona um novo produto à lista de produtos
+            while True:
+                pesoProduto_input = input("Digite o peso do produto: ")
+                if re.match(r'^[0-9.]+$', pesoProduto_input):
+                    pesoProduto = float(pesoProduto_input)
+                    break
+                else:
+                    print("Peso inválido. Certifique-se de que você digitou um valor numérico válido.")
+
+            while True:
+                valorProduto_input = input("Digite o valor do produto: ")
+                if re.match(r'^[0-9.]+$', valorProduto_input):
+                    valorProduto = float(valorProduto_input)
+                    break
+                else:
+                    print("Valor inválido. Certifique-se de que você digitou um valor numérico válido.")
+
+            fornecedorProduto = input("Informe o fornecedor do produto: ")
             produtos = adicionarProduto(produtos, nomeProduto, pesoProduto, valorProduto, fornecedorProduto)
             print("+--------------------------------+")
             print(f"Produto cadastrado com ID: {produtos[-1]['ID']}")
             print("+--------------------------------+")
-        
         elif opMenu == '5':
             idEscolhidoParaAtualizarProduto = int(input("Digite o ID do produto que deseja atualizar: "))
             atualizarProduto(produtos, idEscolhidoParaAtualizarProduto)
@@ -245,7 +240,6 @@ def main():
             idEscolhidoParaExcluirProduto = int(input("Digite o ID do produto que deseja excluir: "))
             excluirProduto(produtos, idEscolhidoParaExcluirProduto)
         elif opMenu == '7':
-            # Salva os produtos no arquivo antes de sair do programa
             salvarProdutos(produtos)
             break
         else:
