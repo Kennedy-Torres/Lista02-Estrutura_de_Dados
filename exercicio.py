@@ -219,15 +219,26 @@ def main():
             for produto in produtos:
                 print(produto)
         elif opMenu == '2':
-            ids_para_listar = input("Digite os IDs dos produtos separados por vírgula: ").split(',')
-            ids_para_listar = [int(id_str.strip()) for id_str in ids_para_listar]
-            produtos_encontrados = [produto for produto in produtos if produto['ID'] in ids_para_listar]
-
-            if produtos_encontrados:
-                for produto in produtos_encontrados:
-                    print(produto)
-            else:
-                print("Nenhum produto encontrado com os IDs especificados.")
+        
+            while True:
+                #LE
+                ids_para_listar = input("Digite os IDs dos produtos separados por vírgula: ").split(',')
+                #Valida
+                ids_para_listar = [id_str.strip() for id_str in ids_para_listar]
+                try:
+                    ids_para_listar = [int(id_str) for id_str in ids_para_listar]
+                    produtos_encontrados = [produto for produto in produtos if produto['ID'] in ids_para_listar]
+                    for produto in produtos_encontrados:
+                        print(produto)
+                    break
+                except ValueError:
+                    print("ID inválido. Verifique se você digitou um número válido.")
+            #nao estava validando alfanumericos
+            #if produtos_encontrados:
+            #    for produto in produtos_encontrados:
+            #        print(produto)
+            #else:
+            #    print("Nenhum produto encontrado com os IDs especificados.")
         elif opMenu == '3':
             metodo_escolhido = leValidaMetodo()
             ordem_escolhida = leValidaOrdem()
@@ -258,11 +269,27 @@ def main():
             print(f"Produto cadastrado com ID: {produtos[-1]['ID']}")
             print("+--------------------------------+")
         elif opMenu == '5':
-            idEscolhidoParaAtualizarProduto = int(input("Digite o ID do produto que deseja atualizar: "))
-            atualizarProduto(produtos, idEscolhidoParaAtualizarProduto)
+            #validacao 
+            while True:
+                try:
+                    #Le + funcionalidade
+                    idEscolhidoParaAtualizarProduto = int(input("Digite o ID do produto que deseja atualizar: "))
+                    atualizarProduto(produtos, idEscolhidoParaAtualizarProduto)
+                    break
+                except ValueError:
+                    print("ID inválido. Verifique se você digitou um número válido.")
+                
         elif opMenu == '6':
-            idEscolhidoParaExcluirProduto = int(input("Digite o ID do produto que deseja excluir: "))
-            excluirProduto(produtos, idEscolhidoParaExcluirProduto)
+            #validacao
+            while True:
+                try:
+                    #Le + funcionalidade
+                    idEscolhidoParaExcluirProduto = int(input("Digite o ID do produto que deseja excluir: "))
+                    excluirProduto(produtos, idEscolhidoParaExcluirProduto)
+                    break
+                except ValueError:
+                    print("ID inválido. Verifique se você digitou um número válido.")
+                    
         elif opMenu == '7':
             salvarProdutos(produtos)
             break
