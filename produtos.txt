@@ -2,6 +2,7 @@ ID: 1, Nome: 1, Peso: 3.0, Valor: 7.0, Fornecedor: t6
 ID: 2, Nome: Cafeteira, Peso: 0.7, Valor: 33.4, Fornecedor: casas bahias
 ID: 3, Nome: Teclado mecanico, Peso: 0.6, Valor: 1200.0, Fornecedor: Warrior
 ID: 4, Nome: a, Peso: 1.0, Valor: 11.0, Fornecedor: aa
-ID: 5, Nome: b, Peso: 2.0, Valor: 22.0, Fornecedor: bb
-ID: 6, Nome: c, Peso: 3.0, Valor: 33.0, Fornecedor: cc
-ID: 7, Nome: d, Peso: 4.0, Valor: 44.0, Fornecedor: dd
+ID: 5, Nome: c, Peso: 3.0, Valor: 33.0, Fornecedor: cc
+ID: 6, Nome: d, Peso: 4.0, Valor: 44.0, Fornecedor: dd
+ID: 7, Nome: codigo_final, Peso: 0.0, Valor: 13450.0, Fornecedor: Torres_vinicius
+ID: 8, Nome: t4, Peso: 7.0, Valor: 99.0, Fornecedor: 6u
